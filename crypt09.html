@@ -1,0 +1,326 @@
+<html>
+<head>
+<title>Crypt 0.9</title>
+
+<!-- Voici un commentaire -->
+
+<!-- Crypt 0.9 --><!-- table et décrypt CLEF Simplifie les scripts ajout de fonctions simples --><!-- SL+Clef a revoir (chiffrement et dechiffrement-->
+<!-- Crypt 0.8 --><!-- sandletter --><!-- SL+Clef-->
+<!-- Crypt 0.7 --><!-- clef au longmaclef-->
+<!-- Crypt 0.6 changer les caractères spéciaux éèê par e ....-->
+<!-- Crypt 0.5 utiliser les fonctions independament -->
+<!-- Crypt 0.4 clef --><!-- chaque carac du pass = cesar different à chaque carac du message : vigere-->
+<!-- Crypt 0.3 cesar -->
+<!-- Crypt 0.2 rot13 -->
+<!-- Crypt 0.1 rot20 -->
+
+
+<!-- intervertir les lettres -->
+
+
+<!-- [SL]PASS[SL]SSAP... -->
+
+<!-- cesar au somme lettre P+A+S+S -->
+
+<!-- clef/2 = +clef puis -clef -->
+<!-- clef/2 = +clef puis -clef 1 sur 2-->
+
+
+<!-- decrypt pour toutes les methodes-->
+
+
+<script>
+
+function sandletter()
+{
+//Génération de Sel
+var s1 = "abcdefghijklmnopqrstuvwxyz";
+var nbaleatoire=Math.floor(Math.random()*25)
+lettrealeatoire=s1.charAt(nbaleatoire);
+return lettrealeatoire;
+}
+
+
+function caracspe2(chaineatraiter)
+{
+// remise en minuscule + suppr caractères spéciaux
+chaineatraiter=chaineatraiter.toLowerCase();
+chaineatraiter=chaineatraiter.replace("é","e");
+chaineatraiter=chaineatraiter.replace("ë","e");
+chaineatraiter=chaineatraiter.replace("è","e");
+chaineatraiter=chaineatraiter.replace("ê","e");
+chaineatraiter=chaineatraiter.replace("à","a");
+chaineatraiter=chaineatraiter.replace("â","a");
+chaineatraiter=chaineatraiter.replace("û","u");
+chaineatraiter=chaineatraiter.replace("ù","u");
+chaineatraiter=chaineatraiter.replace("ô","o");
+chaineatraiter=chaineatraiter.replace("î","i");
+chaineatraiter=chaineatraiter.replace("ï","i");
+chaineatraiter=chaineatraiter.replace("œ","oe");
+chaineatraiter=chaineatraiter.replace("ç","c");
+return (chaineatraiter);
+}
+
+function fclef2()
+{
+// ajouter une gestion des champs vides
+
+chainea=document.f1.t1.value;
+chainea=caracspe2(chainea);
+//longueur de machaine
+longmachaine=(chainea.length);
+
+
+maclef=document.f1.laclef.value;
+maclef=caracspe2(maclef);
+//longueur de laclef
+longmaclef=(maclef.length);
+
+//window.alert("longmaclef : "+longmaclef);
+
+var s1 = "abcdefghijklmnopqrstuvwxyz";
+var machaine2="";
+
+var j=0;
+
+
+//Pour chaque caractère de machaine
+for(i=0 ; i < longmachaine ; i++) 
+	{
+	moncarac=chainea.charAt(i);
+
+	//Si le caractère de la chaine à décoder n'est pas attendu
+	if (s1.indexOf(moncarac) === -1)
+		{
+		//j=j-1;
+		//window.alert("cle pas up");
+		machaine2+=moncarac
+		}
+	else
+		{
+
+		caracclef=maclef.charAt(j);
+//window.alert("caracclef: "+caracclef);
+
+		poscaracclef=s1.indexOf(caracclef);		
+		machaine2+=decal(moncarac, poscaracclef);
+		j++;
+		if (j>=longmaclef)
+			{j=0;}
+		}
+	}
+document.f1.t2.value=machaine2;
+document.f1.verif1.value=machaine2.length;
+
+}
+
+
+
+function rot132(delta)
+{
+chainea=document.f1.t1.value;
+chainea=caracspe2(chainea);
+longmachaine=(chainea.length);
+var machaine2="";
+
+//Pour chaque caractère de machaine
+for(i=0 ; i < longmachaine ; i++) 
+	{
+	//prendre le caractère en question
+	moncarac=chainea.charAt(i);
+//window.alert("position mon carac " + moncarac + " delta: " + delta)
+	machaine2+=decal(moncarac,delta)
+	}
+//window.alert(machaine2);
+document.f1.t2.value=machaine2;
+}
+
+
+
+
+function decal(Adecal,delta)
+{
+//decale x caractères
+
+var s1 = "abcdefghijklmnopqrstuvwxyz";
+positionrot=s1.indexOf(moncarac);
+
+if (positionrot < 0) 
+	{return Adecal;}
+else
+	{
+// On ajoute le décalage, et le modulo 26 s'occupe de "boucler" à zéro
+	positionrot = (positionrot + delta*1) % 26;
+//window.alert("position mon carac " + Adecal + " delta: " + delta + " positionrot : "+ positionrot + " newcaract : " + s1.charAt(positionrot));
+	return (s1.charAt(positionrot));
+
+	}
+}
+
+
+function retournecle()
+{
+// Récupère la valeur de laclef, demande la fonction antialpha de traiter la chaine, remet la nouvelle valeur dans laclef
+document.f1.laclef.value=caracspe2(document.f1.laclef.value);
+document.f1.laclef.value=antialpha(document.f1.laclef.value);
+}
+
+
+function antialpha(lalpha,delta)
+{
+// retourne une chaine en alphabetique inversée
+// possible d'ajouter un delta
+delta=-1;
+var alpha     = "abcdefghijklmnopqrstuvwxyz";
+var antialpha = "zyxwvutsrqponmlkjihgfedcba";
+
+var antialphafull="";
+
+lalpha=caracspe2(lalpha);
+
+var longalpha=(lalpha.length);
+
+
+for(i=0 ; i < longalpha ; i++) 
+	{
+//prendre le caractère en question
+	moncarac=lalpha.charAt(i);
+
+//trouver la position du caractère
+	posialpha=alpha.indexOf(moncarac);
+
+	lettreantialpha=antialpha.charAt(posialpha+delta);
+	antialphafull+= lettreantialpha;
+	}
+//document.f1.laclef.value=antialphafull;
+return antialphafull;
+}
+
+
+function rot20()
+{
+//
+//caracspe();
+chainea=document.f1.t1.value;
+chainea=caracspe2(chainea);
+var machaine2="";
+var s1 = "abcdefghijklmnopqrstuvwxyz0123456789.,!?";
+
+//mise en minuscule
+//chainea=chainea.toLowerCase();
+
+//longueur de machaine
+longmachaine=(chainea.length);
+
+//Pour chaque caractère de machaine
+
+for(i=0 ; i < longmachaine ; i++) 
+	{
+	//prendre le caractère en question
+	moncarac=chainea.charAt(i);
+
+	//trouver la position du caractère
+	positionrot20=s1.indexOf(moncarac);
+
+	//décaler en rot20
+	if (positionrot20>"-1")
+		{
+		positionrot20=positionrot20+20;
+		if (positionrot20>39){positionrot20=positionrot20-40;}
+		moncarac=s1.charAt(positionrot20);		
+		}
+	machaine2+=moncarac;
+	}
+document.f1.t2.value=machaine2;
+document.f1.verif1.value=machaine.length;
+return machaine2;
+}
+
+</script>
+
+</head>
+
+<body>
+
+<form name=f1>
+<textarea name=t1 rows=12 cols=50></textarea>
+<textarea name=t2 rows=12 cols=50></textarea><input type=text name=verif1 size=3><br>
+
+<br>
+
+<input type=button name=b12 value="ROT13/CESAR" Onclick="rot132(13);"><br>
+
+<input type=button name=b1 value=ROT20 Onclick="rot20();">(si alphabet de 20 caractère (avec ponctuation)<br>
+
+
+<input type=button name=b1 value="ROTx"  Onclick="rot132(document.f1.nbrot.value);">
+<SELECT name="nbrot">
+		<OPTION VALUE="1">01</OPTION>
+		<OPTION VALUE="2">02</OPTION>
+		<OPTION VALUE="3">03</OPTION>
+		<OPTION VALUE="4">04</OPTION>
+		<OPTION VALUE="5">05</OPTION>
+		<OPTION VALUE="6">06</OPTION>
+		<OPTION VALUE="7">07</OPTION>
+		<OPTION VALUE="8">08</OPTION>
+		<OPTION VALUE="9">09</OPTION>
+		<OPTION VALUE="10">10</OPTION>
+		<OPTION VALUE="11">11</OPTION>
+		<OPTION VALUE="12">12</OPTION>
+		<OPTION VALUE="13">13</OPTION>
+		<OPTION VALUE="14">14</OPTION>
+		<OPTION VALUE="15">15</OPTION>
+		<OPTION VALUE="16">16</OPTION>
+		<OPTION VALUE="17">17</OPTION>
+		<OPTION VALUE="18">18</OPTION>
+		<OPTION VALUE="19">19</OPTION>
+		<OPTION VALUE="20">20</OPTION>
+		<OPTION VALUE="21">21</OPTION>
+		<OPTION VALUE="22">22</OPTION>
+		<OPTION VALUE="23">23</OPTION>
+		<OPTION VALUE="24">24</OPTION>
+		<OPTION VALUE="25">25</OPTION>
+		<OPTION VALUE="26">26-00</OPTION>
+	</SELECT>
+<br>
+<input type=button style="background:red; color:white;" value="remember" onclick="document.f1.t1.value='Gqfltwj emgj clgfv ! Aqltj rjqhjsksg ekxuaqs, ua xtwk n feuguvwb gkwp xwj, ujts f npxkqvjgw nw tjuwcz ugwygjtfkf qz uw efezg sqk gspwonu. Jgsfwb-aqmu f Ospygk nj 29 cntnn hqzt dg igtwy fw xtvjg rkkunqf.';document.f1.laclef.value='FCSC'">
+<input type=text name=laclef size=8>
+<input type=button name=b5 value="Clef pour Chiffre/dechiffre" onclick="retournecle();">
+<input type=button name=b2 value="CLEF (Vigenère)" Onclick="fclef2();"><br>
+
+
+
+
+<input type=button name=b3 value="RotSizeCle" Onclick="rot132(document.f1.laclef.value.length);window.alert('Rot : '+ document.f1.laclef.value.length);">
+
+CLEF,SL,CLEF,SL...<SELECT name="SandLetter">
+	<OPTION VALUE="OFF">OFF</OPTION>
+	<OPTION VALUE="ON">ON</OPTION>
+<SELECT>
+
+<br>
+</form>
+
+<hr>
+
+Rappel:
+<table border=2>
+<tr>
+<td>Alpha
+<td>A<td>B<td>C<td>D<td>E<td>F<td>G<td>H<td>I<td>J<td>K<td>L<td>M<td>N<td>O<td>P<td>Q<td>R<td>S<td>T<td>U<td>V<td>W<td>X<td>Y<td>Z
+<tr>
+<td>AntiAlpha
+<td>Z<td>Y<td>X<td>W<td>V<td>U<td>T<td>S<td>R<td>Q<td>P<td>O<td>N<td>M<td>L<td>K<td>J<td>I<td>H<td>G<td>F<td>E<td>D<td>C<td>B<td>A
+<tr>
+<td>Nb
+<td>01<td>02<td>03<td>04<td>05<td>06<td>07<td>08<td>09<td>10<td>11<td>12<td>13<td>14<td>15<td>16<td>17<td>18<td>19<td>20<td>21<td>22<td>23<td>24<td>25<td>26
+<tr>
+<td>AntiNb
+<td>26<td>25<td>24<td>23<td>22<td>21<td>20<td>19<td>18<td>17<td>16<td>15<td>14<td>13<td>12<td>11<td>10<td>09<td>08<td>07<td>06<td>05<td>04<td>03<td>02<td>01
+<tr>
+<td>Cesar
+<td>N<td>O<td>P<td>Q<td>R<td>S<td>T<td>U<td>V<td>W<td>X<td>Y<td>Z<td>A<td>B<td>C<td>D<td>E<td>F<td>G<td>H<td>I<td>J<td>K<td>L<td>M
+
+</table>
+</body>
+</html>
